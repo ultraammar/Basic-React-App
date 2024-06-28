@@ -91,6 +91,7 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
       //make initialValues object equal to the object in local storage
       setUpdate(JSON.parse(localStorage.getItem("update")));
       console.log(update, "avc");
+      console
       if(update){
         formik.setValues({
           id: update.id,
@@ -98,7 +99,7 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
           firstName: update.firstName ,
           lastName: update.lastName, 
           streetAddress: update.streetAddress ,
-          workStatus: update.workStatus , //dropdown
+          workStatus: update.workStatus  , //dropdown
           contactNumber: update.contactNumber ? update.contactNumber.replace(/^\+92/, "") : "",
 
           countryCode:  "+92",
