@@ -1,0 +1,16 @@
+
+requiremnets in the form:
+ +92 format Phone number (requirement is theat if the number is 032247472788,
+ Email, address, contact , dropdown (position for example),
+ toggle button (onClick = popup), (the deactivate variable becomes opposite on click)
+
+ theres an edit button next to the table
+ "Add" button
+
+
+
+
+ if click add form, in the table below the line will show)
+
+
+ use restrictions with yup,
