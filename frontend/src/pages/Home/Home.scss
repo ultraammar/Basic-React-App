@@ -13,10 +13,13 @@ $width-of-content: 1000px;
 
 .site-layout-content{
             background: #ffffff;
-            min-height: 280px;
+            height: 36rem !important;
             padding: 70px;
             border-radius: 50px;
             // width: $width-of-content;
+            display: flex;
+            flex-direction: column;
+            height: inherit;
          
 }
 

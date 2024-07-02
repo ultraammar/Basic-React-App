@@ -69,6 +69,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
       values.contactNumber = `${values.countryCode}${cleanedContactNumber}`;
       // alert(JSON.stringify(values, null, 2));
       setId((prev) => prev+1);
+      console.log("id at line 72 = ", id);
       formik.resetForm();
       form.resetFields();
       
@@ -83,6 +84,11 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
       localStorage.setItem("feedback", JSON.stringify(feedback));
     },
     validationSchema: Yup.object({
+      firstName: Yup.string()
+     .min(2, 'Too Short!')
+     .max(50, 'Too Long!')
+     .required('Required'),
+
     }),
   });
 
@@ -130,7 +136,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
         <Form.Item label="ID" name="id"
         >
           <Input
-            id="id"
+            // id="id"
             name="id"
             type="text"
             onChange={formik.handleChange}
@@ -154,7 +160,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
           ]}
         >
           <Input
-            id="email"
+            // id="email"
             name="email"
             type="email"
             onChange={formik.handleChange}
@@ -174,7 +180,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
         ]}
         >
           <Input
-            id="firstName"
+            // id={}
             name="firstName"
             type="text"
             onChange={formik.handleChange}
