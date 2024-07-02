@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./Home.scss";
 
-import { Layout } from "antd";
+import { Col, Layout, Row } from "antd";
 import Navbar from "../../components/Navbar/Navbar";
 import FeedbackForm from "../../components/FeedbackForm/FeedbackForm";
 import FeedbackTable from "../../components/FeedbackTable/FeedbackTable";
@@ -19,22 +19,31 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className="homepage" style={{paddingTop: "125px"}}>
+      <div className="homepage" style={{ paddingTop: "125px" }}>
         {/* <h2>Home</h2> */}
 
         <Content>
-          <div className="site-layout-content">
-            <h1 id="feedback-form" >Welcome to the Home Page</h1>
-            <FeedbackForm dataSetter={setData} dataToUpdate={dataToUpdate}/>
-          </div>
-          <div className="site-layout-content" style={{ marginTop: 100 }}>
-            <h1>Feedback Table</h1>
-            <FeedbackTable
-              data={data}
-              dataSetter={setData}
-              setDataToUpdate={setDataToUpdate}
-            />
-          </div>
+          <Row gutter={{xl: 10}} >
+            <Col xl={12} lg={24}>
+              <div className="site-layout-content">
+                <h1 id="feedback-form">Welcome to the Home Page</h1>
+                <FeedbackForm
+                  dataSetter={setData}
+                  dataToUpdate={dataToUpdate}
+                />
+              </div>
+            </Col>
+            <Col xl={12} lg={24} >
+              <div className="site-layout-content" /*style={{ marginTop: 100 }}*/>
+                <h1>Feedback Table</h1>
+                <FeedbackTable
+                  data={data}
+                  dataSetter={setData}
+                  setDataToUpdate={setDataToUpdate}
+                />
+              </div>
+            </Col>
+          </Row>
         </Content>
       </div>
     </div>
