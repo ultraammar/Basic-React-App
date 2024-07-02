@@ -7,7 +7,7 @@ import { Space, Table, Tag } from "antd";
 
 
 
-const FeedbackTable = ({ data, dataSetter, setIsDataUpdate }) => {
+const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
 
   const [localData, setLocalData] = useState([]);
   const handleDelete = (record) => {
@@ -18,13 +18,16 @@ const FeedbackTable = ({ data, dataSetter, setIsDataUpdate }) => {
   }
   const handleUpdate = (record) => {
     localStorage.setItem("update", JSON.stringify(record));
-    setIsDataUpdate("true");
+    setDataToUpdate(JSON.stringify(record));
     
+    //scroll to the id called "feedback-form"
+    document.getElementById("feedback-form").scrollIntoView({ behavior: 'smooth'});
+
     
   }
 
   const columns = [
-    {title: "id", dataIndex: "id", key: "id"},
+    {title: "id", dataIndex: "id", key: "id", width: 50},
     {
       title: "Email",
       dataIndex: "email",
@@ -61,6 +64,8 @@ const FeedbackTable = ({ data, dataSetter, setIsDataUpdate }) => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      fixed: "right",
+      width: 100,
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => handleUpdate(record)}>Edit </a>
@@ -83,6 +88,7 @@ const FeedbackTable = ({ data, dataSetter, setIsDataUpdate }) => {
         columns={columns}
         dataSource={localData}
         rowKey={(record) => record.id}
+        scroll={{ x: 1000 }}
         
       />
     </div>

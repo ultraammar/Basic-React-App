@@ -7,6 +7,7 @@ import {
   ProductOutlined,
   HomeOutlined,
   UserOutlined
+  
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link, useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ const Navbar = () => {
           selectedKeys={[current]}
           mode="horizontal"
           className="nav-ul"  
-          disabledOverflow="true"
+          disabledOverflow="false"
         >
           <Menu.Item key="/" icon={<HomeOutlined />}>
             <Link to="/">Home</Link>

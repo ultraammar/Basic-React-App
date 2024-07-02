@@ -38,7 +38,7 @@ const formItemLayout = {
   },
 };
 
-const FeedbackForm = ({dataSetter, isDataUpdate}) => {
+const FeedbackForm = ({dataSetter, dataToUpdate}) => {
   let last_id=0;
   if (localStorage.getItem("feedback")) {
     const tempStore = JSON.parse(localStorage.getItem("feedback"));
@@ -59,7 +59,7 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
       firstName: "",
       lastName: "",
       streetAddress: "",
-      workStatus: "", //dropdown
+      workStatus: "unselected", //dropdown
       contactNumber: "",
       countryCode: "+92",
     },
@@ -68,7 +68,7 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
       const cleanedContactNumber = values.contactNumber.toString().replace(/^0+/, "");
       values.contactNumber = `${values.countryCode}${cleanedContactNumber}`;
       // alert(JSON.stringify(values, null, 2));
-      setId(id + 1);
+      setId((prev) => prev+1);
       formik.resetForm();
       form.resetFields();
       
@@ -87,30 +87,33 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
   });
 
   useEffect(()=>{
-    if(isDataUpdate){
-      //make initialValues object equal to the object in local storage
-      setUpdate(JSON.parse(localStorage.getItem("update")));
-      console.log(update, "avc");
-      console
-      if(update){
+    if(dataToUpdate){
+      //set formik values equal to object in local storage
+      console.log(dataToUpdate);
+      setUpdate(JSON.parse(dataToUpdate));
+      let tempUpdate = JSON.parse(dataToUpdate);
+      // console.log(update, "avc");
+      if(tempUpdate){
+        console.log("SSS",formik.setValues)
         formik.setValues({
-          id: update.id,
-          email: update.email ,
-          firstName: update.firstName ,
-          lastName: update.lastName, 
-          streetAddress: update.streetAddress ,
-          workStatus: update.workStatus  , //dropdown
-          contactNumber: update.contactNumber ? update.contactNumber.replace(/^\+92/, "") : "",
-
+          id: dataToUpdate.id,
+          email: dataToUpdate.email ,
+          firstName: tempUpdate.firstName ,
+          lastName: tempUpdate.lastName, 
+          streetAddress: tempUpdate.streetAddress ,
+          workStatus: tempUpdate.workStatus  , //dropdown
+          
+          contactNumber: tempUpdate.contactNumber ? tempUpdate.contactNumber.replace(/^\+92/, "") : "",
           countryCode:  "+92",
         });
+        console.log(formik, "= formik value");
 
       }
     }
-  }, [isDataUpdate])
+  }, [dataToUpdate])
 
   return (
-    <div className="some-class">
+    <div >
       <p>Please fill this feedback form.</p>
 
       <Form
@@ -197,6 +200,7 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
             id="lastName"
             name="lastName"
             type="text"
+            
             onChange={formik.handleChange}
             value={formik.values.lastName}
             className={
@@ -245,8 +249,9 @@ const FeedbackForm = ({dataSetter, isDataUpdate}) => {
             type="text"
             onChange={(value) => formik.setFieldValue("workStatus", value)}
             value={formik.values.workStatus}
-            defaultValue={"Please select one"}
+            // defaultValue={"Please select one"}
             options={[
+              { value: "unselected", label: "Please select a value" },
               { value: "student", label: "Student" },
               { value: "employed", label: "Employed" },
               { value: "unemployed", label: "Unemployed" },

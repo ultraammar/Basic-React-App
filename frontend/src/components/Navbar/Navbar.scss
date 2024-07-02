@@ -3,10 +3,14 @@ $width-of-content: 1000px;
 
 .nav-back{
     background-image: $primary-color;
-    
     display: flex;
     justify-content: center;
     align-items: center;
+
+    //stick nav to top
+    position: fixed;
+    width: 100%;
+    z-index: 3;
   
   }
   
