@@ -81,13 +81,20 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
   , [data]);
   
 
+  
+  // console.log(data.map((item) => console.log(item.id)));
+  
+
   return (
+
+    
     <div>
       {console.log(localData)}
       <Table
         columns={columns}
         dataSource={localData}
         rowKey={(record) => record.id}
+        
         scroll={{ x: 1000 }}
         
       />

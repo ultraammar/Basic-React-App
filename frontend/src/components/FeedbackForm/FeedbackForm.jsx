@@ -47,7 +47,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
     }
   }
 
-  const [id, setId] = useState(last_id + 1);
+  const [id, setId] = useState(last_id+1);
   const [update, setUpdate] = useState(null);
 
   
@@ -69,6 +69,8 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
       values.contactNumber = `${values.countryCode}${cleanedContactNumber}`;
       // alert(JSON.stringify(values, null, 2));
       setId((prev) => prev+1);
+      console.log("values = ", values.id);
+      values.id = id;
       console.log("id at line 72 = ", id);
       formik.resetForm();
       form.resetFields();
@@ -136,7 +138,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
         <Form.Item label="ID" name="id"
         >
           <Input
-            // id="id"
+            id="id"
             name="id"
             type="text"
             onChange={formik.handleChange}
@@ -160,7 +162,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
           ]}
         >
           <Input
-            // id="email"
+            id="email"
             name="email"
             type="email"
             onChange={formik.handleChange}
@@ -180,7 +182,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
         ]}
         >
           <Input
-            // id={}
+            id="firstName"
             name="firstName"
             type="text"
             onChange={formik.handleChange}
