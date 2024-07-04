@@ -15,7 +15,7 @@ import {
 } from "antd";
 
 // import PK from 'country-flag-icons/flags/3x2/PK.svg';
-import PK from "../../assets/PK.svg";
+import PK from "../../../assets/PK.svg";
 import { FlagFilled } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
@@ -38,8 +38,8 @@ const formItemLayout = {
   },
 };
 
-const FeedbackForm = ({dataSetter, dataToUpdate}) => {
-  let last_id=0;
+const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
+  let last_id = 0;
   if (localStorage.getItem("feedback")) {
     const tempStore = JSON.parse(localStorage.getItem("feedback"));
     if (Array.isArray(tempStore) && tempStore.length > 0) {
@@ -47,10 +47,9 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
     }
   }
 
-  const [id, setId] = useState(last_id+1);
+  const [id, setId] = useState(last_id + 1);
   const [update, setUpdate] = useState(null);
 
-  
   const [form] = Form.useForm();
   const formik = useFormik({
     initialValues: {
@@ -65,17 +64,19 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
     },
     onSubmit: (values) => {
       // Before submitting, concatenate countryCode with contactNumber after cleaning
-      const cleanedContactNumber = values.contactNumber.toString().replace(/^0+/, "");
+      const cleanedContactNumber = values.contactNumber
+        .toString()
+        .replace(/^0+/, "");
       values.contactNumber = `${values.countryCode}${cleanedContactNumber}`;
       // alert(JSON.stringify(values, null, 2));
-      setId((prev) => prev+1);
+      setId((prev) => prev + 1);
       console.log("values = ", values.id);
       values.id = id;
       console.log("id at line 72 = ", id);
       formik.resetForm();
       form.resetFields();
-      
-     //push to local storage table
+
+      //push to local storage table
       let feedback = JSON.parse(localStorage.getItem("feedback"));
       if (!feedback) {
         feedback = [];
@@ -87,56 +88,52 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
-     .min(2, 'Too Short!')
-     .max(50, 'Too Long!')
-     .required('Required'),
-
+        .min(2, "Too Short!")
+        .max(50, "Too Long!")
+        .required("Required"),
     }),
   });
 
-  useEffect(()=>{
-    if(dataToUpdate){
+  useEffect(() => {
+    if (dataToUpdate) {
       //set formik values equal to object in local storage
       console.log(dataToUpdate);
-      setUpdate(JSON.parse(dataToUpdate));
-      let tempUpdate = JSON.parse(dataToUpdate);
-      // console.log(update, "avc");
-      if(tempUpdate){
-        console.log("SSS",formik.setValues)
-        formik.setValues({
-          id: dataToUpdate.id,
-          email: dataToUpdate.email ,
-          firstName: tempUpdate.firstName ,
-          lastName: tempUpdate.lastName, 
-          streetAddress: tempUpdate.streetAddress ,
-          workStatus: tempUpdate.workStatus  , //dropdown
-          
-          contactNumber: tempUpdate.contactNumber ? tempUpdate.contactNumber.replace(/^\+92/, "") : "",
-          countryCode:  "+92",
-        });
-        console.log(formik, "= formik value");
 
-      }
+      console.log("SSS", formik.setValues);
+      formik.setValues({
+        id: dataToUpdate.id,
+        email: dataToUpdate.email,
+        firstName: dataToUpdate.firstName,
+        lastName: dataToUpdate.lastName,
+        streetAddress: dataToUpdate.streetAddress,
+        workStatus: dataToUpdate.workStatus, //dropdown
+
+        contactNumber: dataToUpdate.contactNumber
+          ? dataToUpdate.contactNumber.replace(/^\+92/, "")
+          : "",
+        countryCode: "+92",
+      });
+      console.log(formik, "= formik value");
     }
-  }, [dataToUpdate])
+  }, [dataToUpdate]);
 
+
+  console.log(formik.values);
+  console.log(formik.values.email);
   return (
-    <div >
+    <div>
       <p>Please fill this feedback form.</p>
-
       <Form
-      form={form}
+        form={form}
         onFinish={formik.handleSubmit}
         {...formItemLayout}
         variant="filled"
         style={{
-          // maxWidth: 600,
+            // maxWidth: 600,
           width: "100%",
         }}
       >
-        
-        <Form.Item label="ID" name="id"
-        >
+        <Form.Item label="ID" name="id">
           <Input
             id="id"
             name="id"
@@ -153,13 +150,7 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
 
         <Form.Item
           label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-          ]}
+          // name="email"
         >
           <Input
             id="email"
@@ -173,16 +164,12 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
           />
         </Form.Item>
 
-        <Form.Item label="First Name" name="firstName"
-        rules={[
-          {
-            required: true,
-            message: "Please input your first name!",
-          },
-        ]}
+        <Form.Item
+          label="First Name"
+          // name="firstName"
         >
           <Input
-            id="firstName"
+            // id="firstName"
             name="firstName"
             type="text"
             onChange={formik.handleChange}
@@ -192,23 +179,18 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
                 ? "input-error"
                 : ""
             }
-            
           />
         </Form.Item>
 
-        <Form.Item label="Last Name" name="lastName"
-          rules={[
-            {
-              required: true,
-              message: "Please input your last name!",
-            },
-          ]}
+        <Form.Item
+          label="Last Name"
+          // name="lastName"
+        
         >
           <Input
             id="lastName"
             name="lastName"
             type="text"
-            
             onChange={formik.handleChange}
             value={formik.values.lastName}
             className={
@@ -216,17 +198,12 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
                 ? "input-error"
                 : ""
             }
-            
           />
         </Form.Item>
 
-        <Form.Item label="Street Address" name="streetAddress"
-        rules={[
-          {
-            required: true,
-            message: "Please input your street address!",
-          },
-        ]}
+        <Form.Item
+          label="Street Address"
+          // name="streetAddress"
         >
           <Input
             id="streetAddress"
@@ -239,17 +216,12 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
                 ? "input-error"
                 : ""
             }
-            
           />
         </Form.Item>
 
-        <Form.Item label="Work Status" name="workStatus"
-        rules={[
-          {
-            required: true,
-            message: "Please input your work status!",
-          },
-        ]}
+        <Form.Item
+          label="Work Status"
+          // name="workStatus"  
         >
           <Select
             id="workStatus"
@@ -269,7 +241,6 @@ const FeedbackForm = ({dataSetter, dataToUpdate}) => {
                 ? "input-error"
                 : ""
             }
-            
           />
         </Form.Item>
 

@@ -11,7 +11,7 @@ import FeedbackUpdate from "./pages/FeedbackUpdate/FeedbackUpdate";
 
 function App() {
   return (
-    <main>
+    <main data-theme="dark">
       <BrowserRouter>
         <Routes>
           <Route path="/login" exact element={

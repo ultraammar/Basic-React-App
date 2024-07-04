@@ -4,8 +4,8 @@ import "./Home.scss";
 
 import { Col, Layout, Row } from "antd";
 import Navbar from "../../components/Navbar/Navbar";
-import FeedbackForm from "../../components/FeedbackForm/FeedbackForm";
-import FeedbackTable from "../../components/FeedbackTable/FeedbackTable";
+import FeedbackForm from "../../components/Feedback/FeedbackForm/FeedbackForm";
+import FeedbackTable from "../../components/Feedback/FeedbackTable/FeedbackTable";
 const { Content } = Layout;
 
 const Home = () => {

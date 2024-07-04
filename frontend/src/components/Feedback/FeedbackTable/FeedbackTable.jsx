@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
+import Model from "../../common/Modal/Model";
+import FeedbackUpdateForm from "../FeedbackUpdateForm/FeedbackUpdateForm";
+
+// import { useSelector, useDispatch } from 'react-redux';
 
 
 
@@ -8,6 +12,11 @@ import { Space, Table, Tag } from "antd";
 
 
 const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
+
+  //using the redux state management to get the dataToUpdate state
+  // const dataToUpdate = useSelector(state => state.dataToUpdate.value);
+  // const dispatch = useDispatch();
+
 
   const [localData, setLocalData] = useState([]);
   const handleDelete = (record) => {
@@ -18,14 +27,18 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
   }
   const handleUpdate = (record) => {
     localStorage.setItem("update", JSON.stringify(record));
-    setDataToUpdate(JSON.stringify(record));
+    setDataToUpdate(record); //do not stringify
     
-    //scroll to the id called "feedback-form"
-    document.getElementById("feedback-form").scrollIntoView({ behavior: 'smooth'});
+    
 
     
   }
 
+  //feedback update model options
+  const [isFeedbackUpdateModalOpen, setIsFeedbackUpdateModalOpen] = useState(false);
+
+
+//table columns
   const columns = [
     {title: "id", dataIndex: "id", key: "id", width: 50},
     {
@@ -68,7 +81,7 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
       width: 100,
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => handleUpdate(record)}>Edit </a>
+          <a onClick={() => {handleUpdate(record); setIsFeedbackUpdateModalOpen(true)}}>Edit </a>
           <a onClick={() => handleDelete(record)}>Delete</a>
         </Space>
       ),
@@ -85,6 +98,9 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
   // console.log(data.map((item) => console.log(item.id)));
   
 
+
+
+
   return (
 
     
@@ -98,6 +114,7 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
         scroll={{ x: 1000 }}
         
       />
+      <Model isModalOpen={isFeedbackUpdateModalOpen} setIsModalOpen={setIsFeedbackUpdateModalOpen} title="Feedback Update" CompToInject={FeedbackUpdateForm} />
     </div>
   );
 };
