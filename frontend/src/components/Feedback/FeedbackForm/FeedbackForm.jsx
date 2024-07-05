@@ -264,7 +264,7 @@ const FeedbackForm = ({ dataSetter }) => {
             htmlType="submit"
             block
             size="large"
-            disabled={!formik.isValid}
+            
           >
             Submit
           </Button>
