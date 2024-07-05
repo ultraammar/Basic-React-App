@@ -3,44 +3,34 @@ import { Space, Table, Tag } from "antd";
 import Model from "../../common/Modal/Model";
 import FeedbackUpdateForm from "../FeedbackUpdateForm/FeedbackUpdateForm";
 
-// import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+import { setDataToUpdate } from "../../../features/feedback/dataUpdate/dataToUpdateSlice";
 
+const FeedbackTable = ({ data, dataSetter }) => {
+  // using the redux state management to get the dataToUpdate state
+  const dataToUpdate = useSelector((state) => state.dataToUpdate.value);
+  const dispatch = useDispatch();
 
-
-
-
-
-
-const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
-
-  //using the redux state management to get the dataToUpdate state
-  // const dataToUpdate = useSelector(state => state.dataToUpdate.value);
-  // const dispatch = useDispatch();
-
-
-  const [localData, setLocalData] = useState([]);
   const handleDelete = (record) => {
     const tempStore = JSON.parse(localStorage.getItem("feedback"));
     const newData = tempStore.filter((item) => item.id !== record.id);
     localStorage.setItem("feedback", JSON.stringify(newData));
     dataSetter(newData);
-  }
+  };
   const handleUpdate = (record) => {
     localStorage.setItem("update", JSON.stringify(record));
-    setDataToUpdate(record); //do not stringify
-    
-    
+    // setDataToUpdate(record); //do not stringify
 
-    
-  }
+    dispatch(setDataToUpdate(record));
+  };
 
   //feedback update model options
-  const [isFeedbackUpdateModalOpen, setIsFeedbackUpdateModalOpen] = useState(false);
+  const [isFeedbackUpdateModalOpen, setIsFeedbackUpdateModalOpen] =
+    useState(false);
 
-
-//table columns
+  //table columns
   const columns = [
-    {title: "id", dataIndex: "id", key: "id", width: 50},
+    { title: "id", dataIndex: "id", key: "id", width: 50 },
     {
       title: "Email",
       dataIndex: "email",
@@ -72,7 +62,7 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
       dataIndex: "contactNumber",
       key: "contactNumber",
     },
-  
+
     {
       title: "Action",
       dataIndex: "action",
@@ -81,40 +71,40 @@ const FeedbackTable = ({ data, dataSetter, setDataToUpdate }) => {
       width: 100,
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => {handleUpdate(record); setIsFeedbackUpdateModalOpen(true)}}>Edit </a>
+          <a
+            onClick={() => {
+              handleUpdate(record);
+              setIsFeedbackUpdateModalOpen(true);
+            }}
+          >
+            Edit{" "}
+          </a>
           <a onClick={() => handleDelete(record)}>Delete</a>
         </Space>
       ),
     },
   ];
 
-  useEffect(() => {
-    setLocalData(data);
-  }
-  , [data]);
-  
-
-  
   // console.log(data.map((item) => console.log(item.id)));
-  
-
-
-
 
   return (
-
-    
     <div>
-      {console.log(localData)}
       <Table
         columns={columns}
-        dataSource={localData}
+        dataSource={data}
         rowKey={(record) => record.id}
-        
         scroll={{ x: 1000 }}
-        
       />
-      <Model isModalOpen={isFeedbackUpdateModalOpen} setIsModalOpen={setIsFeedbackUpdateModalOpen} title="Feedback Update" CompToInject={FeedbackUpdateForm} />
+      <Model
+        isModalOpen={isFeedbackUpdateModalOpen}
+        setIsModalOpen={setIsFeedbackUpdateModalOpen}
+        title="Feedback Update"
+      >
+        <FeedbackUpdateForm
+          dataSetter={dataSetter}
+          setIsModalOpen={setIsFeedbackUpdateModalOpen}
+        />
+      </Model>
     </div>
   );
 };

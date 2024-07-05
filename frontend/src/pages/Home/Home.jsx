@@ -10,7 +10,7 @@ const { Content } = Layout;
 
 const Home = () => {
   const [data, setData] = useState([]);
-  const [dataToUpdate, setDataToUpdate] = useState("false");
+  // const [dataToUpdate, setDataToUpdate] = useState("false");
 
   useEffect(() => {
     setData(JSON.parse(localStorage.getItem("feedback")));
@@ -29,7 +29,7 @@ const Home = () => {
                 <h1 id="feedback-form">Welcome to the Home Page</h1>
                 <FeedbackForm
                   dataSetter={setData}
-                  dataToUpdate={dataToUpdate}
+                  // dataToUpdate={dataToUpdate}
                 />
               </div>
             </Col>
@@ -39,7 +39,7 @@ const Home = () => {
                 <FeedbackTable
                   data={data}
                   dataSetter={setData}
-                  setDataToUpdate={setDataToUpdate}
+                  // setDataToUpdate={setDataToUpdate}
                 />
               </div>
             </Col>

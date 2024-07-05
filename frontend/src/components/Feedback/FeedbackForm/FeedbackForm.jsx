@@ -12,6 +12,7 @@ import {
   Select,
   TreeSelect,
   Space,
+  Tooltip,
 } from "antd";
 
 // import PK from 'country-flag-icons/flags/3x2/PK.svg';
@@ -38,7 +39,21 @@ const formItemLayout = {
   },
 };
 
-const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
+let validationSchema = Yup.object({
+  firstName: Yup.string().min(2, "Too Short!").required("Required"),
+  lastName: Yup.string().required("Required").min(2, "Too Short!"),
+  email: Yup.string().email("Invalid email").required("Required"),
+  streetAddress: Yup.string().min(5, "Too Short!").required("Required"),
+  workStatus: Yup.string().notOneOf(["unselected"], "Please select a value"),
+});
+
+const yupSync = {
+  async validator({ field }, value) {
+    await validationSchema.validateSyncAt(field, { [field]: value });
+  },
+};
+
+const FeedbackForm = ({ dataSetter }) => {
   let last_id = 0;
   if (localStorage.getItem("feedback")) {
     const tempStore = JSON.parse(localStorage.getItem("feedback"));
@@ -86,40 +101,12 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
       console.log(feedback);
       localStorage.setItem("feedback", JSON.stringify(feedback));
     },
-    validationSchema: Yup.object({
-      firstName: Yup.string()
-        .min(2, "Too Short!")
-        .max(50, "Too Long!")
-        .required("Required"),
-    }),
+    validationSchema: validationSchema,
   });
-
-  useEffect(() => {
-    if (dataToUpdate) {
-      //set formik values equal to object in local storage
-      console.log(dataToUpdate);
-
-      console.log("SSS", formik.setValues);
-      formik.setValues({
-        id: dataToUpdate.id,
-        email: dataToUpdate.email,
-        firstName: dataToUpdate.firstName,
-        lastName: dataToUpdate.lastName,
-        streetAddress: dataToUpdate.streetAddress,
-        workStatus: dataToUpdate.workStatus, //dropdown
-
-        contactNumber: dataToUpdate.contactNumber
-          ? dataToUpdate.contactNumber.replace(/^\+92/, "")
-          : "",
-        countryCode: "+92",
-      });
-      console.log(formik, "= formik value");
-    }
-  }, [dataToUpdate]);
-
 
   console.log(formik.values);
   console.log(formik.values.email);
+  console.log(formik.errors.firstName);
   return (
     <div>
       <p>Please fill this feedback form.</p>
@@ -129,7 +116,7 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
         {...formItemLayout}
         variant="filled"
         style={{
-            // maxWidth: 600,
+          // maxWidth: 600,
           width: "100%",
         }}
       >
@@ -150,7 +137,8 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
 
         <Form.Item
           label="Email"
-          // name="email"
+          name="email"
+          rules={[yupSync]}
         >
           <Input
             id="email"
@@ -158,34 +146,28 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
             type="email"
             onChange={formik.handleChange}
             value={formik.values.email}
-            className={
-              formik.errors.email && formik.touched.email ? "input-error" : ""
-            }
           />
         </Form.Item>
 
-        <Form.Item
-          label="First Name"
-          // name="firstName"
-        >
+        <Form.Item label="First Name" name="firstName" rules={[yupSync]}>
           <Input
-            // id="firstName"
+            id="firstName"
             name="firstName"
             type="text"
             onChange={formik.handleChange}
             value={formik.values.firstName}
-            className={
-              formik.errors.firstName && formik.touched.firstName
-                ? "input-error"
-                : ""
-            }
+            className={formik.errors.firstName ? "input-error" : ""}
           />
+
+          {/* { formik.errors.firstName ? (
+            <div className="error">{formik.errors.firstName}</div>
+          ) : null} */}
         </Form.Item>
 
         <Form.Item
           label="Last Name"
-          // name="lastName"
-        
+          name="lastName"
+          rules={[yupSync]}
         >
           <Input
             id="lastName"
@@ -193,11 +175,6 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
             type="text"
             onChange={formik.handleChange}
             value={formik.values.lastName}
-            className={
-              formik.errors.lastName && formik.touched.lastName
-                ? "input-error"
-                : ""
-            }
           />
         </Form.Item>
 
@@ -221,7 +198,7 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
 
         <Form.Item
           label="Work Status"
-          // name="workStatus"  
+          // name="workStatus"
         >
           <Select
             id="workStatus"
@@ -282,7 +259,13 @@ const FeedbackForm = ({ dataSetter, dataToUpdate }) => {
             span: 14,
           }}
         >
-          <Button type="primary" htmlType="submit" block size="large">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            size="large"
+            disabled={!formik.isValid}
+          >
             Submit
           </Button>
         </Form.Item>

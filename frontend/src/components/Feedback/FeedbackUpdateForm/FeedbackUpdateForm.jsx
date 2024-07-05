@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useFormik, Formik } from "formik";
 import * as Yup from "yup";
+import { useSelector, useDispatch } from 'react-redux';
+import { setDataToUpdate } from "../../../features/feedback/dataUpdate/dataToUpdateSlice";
+
 import {
   Button,
   Cascader,
@@ -34,22 +37,20 @@ const formItemLayout = {
   },
 };
 
-const FeedbackUpdateForm = ({ dataSetter, dataToUpdate }) => {
-  let last_id = 0;
-  if (localStorage.getItem("feedback")) {
-    const tempStore = JSON.parse(localStorage.getItem("feedback"));
-    if (Array.isArray(tempStore) && tempStore.length > 0) {
-      last_id = tempStore[tempStore.length - 1].id;
-    }
-  }
+const FeedbackUpdateForm = ({ dataSetter, setIsModalOpen }) => {
 
-  const [id, setId] = useState(last_id + 1);
+    //state management preparation
+    const dataToUpdate = useSelector((state) => state.dataToUpdate.value);
+    const dispatch = useDispatch();
+
+
+  
   const [update, setUpdate] = useState(null);
 
   const [form] = Form.useForm();
   const formik = useFormik({
     initialValues: {
-      id: id,
+      id: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -65,10 +66,10 @@ const FeedbackUpdateForm = ({ dataSetter, dataToUpdate }) => {
         .replace(/^0+/, "");
       values.contactNumber = `${values.countryCode}${cleanedContactNumber}`;
       // alert(JSON.stringify(values, null, 2));
-      setId((prev) => prev + 1);
+        
       console.log("values = ", values.id);
-      values.id = id;
-      console.log("id at line 72 = ", id);
+      
+      
       formik.resetForm();
       form.resetFields();
 
@@ -77,15 +78,23 @@ const FeedbackUpdateForm = ({ dataSetter, dataToUpdate }) => {
       if (!feedback) {
         feedback = [];
       }
-      feedback.push(values);
+
+      //find and update feedback array with id of values.id
+        const index = feedback.findIndex((item) => item.id === values.id);
+        if (index !== -1) {
+            feedback[index] = values;
+        }
+
+      console.log(index);
       dataSetter(feedback);
       console.log(feedback);
       localStorage.setItem("feedback", JSON.stringify(feedback));
+      dispatch(setDataToUpdate(false));
+      setIsModalOpen(false);
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
         .min(2, "Too Short!")
-        .max(50, "Too Long!")
         .required("Required"),
     }),
   });
@@ -125,14 +134,14 @@ const FeedbackUpdateForm = ({ dataSetter, dataToUpdate }) => {
           width: "100%",
         }}
       >
-        <Form.Item label="ID" name="id">
+        <Form.Item label="ID">
           <Input
             id="id"
             name="id"
-            type="text"
+            type="number"
             onChange={formik.handleChange}
             value={formik.values.id}
-            defaultValue={id}
+            
             disabled
             className={
               formik.errors.id && formik.touched.id ? "input-error" : ""
@@ -274,7 +283,7 @@ const FeedbackUpdateForm = ({ dataSetter, dataToUpdate }) => {
           }}
         >
           <Button type="primary" htmlType="submit" block size="large">
-            Submit
+            Update
           </Button>
         </Form.Item>
       </Form>
